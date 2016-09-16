@@ -135,12 +135,12 @@ public class SelectActivity extends BaseActivity {
                     switch (order_state) {
                         case "1":
                             tv_result.setTextColor(Color.BLACK);
-                            tv_result.setText("取件成功\n" + "2s后返回取件扫码界面");
+                            tv_result.setText("取件短信发送成功\n" + "2s后返回取件扫码界面");
                             handler.sendEmptyMessageDelayed(identity, 2000);
                             break;
                         case "2":
                             tv_result.setTextColor(Color.BLACK);
-                            tv_result.setText("派件成功\n" + "2s后返回派件扫码界面");
+                            tv_result.setText("派件短信发送成功\n" + "2s后返回派件扫码界面");
                             handler.sendEmptyMessageDelayed(identity, 2000);
                             break;
                         case "3":
@@ -153,7 +153,11 @@ public class SelectActivity extends BaseActivity {
                             break;
                         case "5":
                             tv_result.setTextColor(Color.RED);
-                            tv_result.setText("扫码失败\n" + "该件已经配送！");
+                            tv_result.setText("扫码失败\n" + "已发送派件短信！");
+                            break;
+                        case "6":
+                            tv_result.setTextColor(Color.RED);
+                            tv_result.setText("短信发送失败\n" + "请重新扫码！");
                             break;
                         default:
                             tv_result.setTextColor(Color.RED);
