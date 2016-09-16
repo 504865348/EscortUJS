@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffe1e0de"
+    android:orientation="vertical">
+<TextView
+    android:layout_margin="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/select_job"
+    android:textSize="16sp"
+    android:textColor="#000"/>
+    <Button
+        android:layout_margin="20dp"
+        android:id="@+id/btn_fetch_package"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fetch_package" />
+    <Button
+        android:layout_margin="20dp"
+        android:id="@+id/btn_deliver_package"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/deliver_package" />
+
+    <TextView
+        android:layout_margin="20dp"
+        android:id="@+id/tv_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000"
+        android:textSize="16sp" />
+</LinearLayout>
