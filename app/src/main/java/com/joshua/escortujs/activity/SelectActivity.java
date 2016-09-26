@@ -45,11 +45,11 @@ public class SelectActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case FETCH_PACKAGE_CODE:
-                    intent.putExtra("comeFrom",FETCH_PACKAGE_CODE);
+                    intent.putExtra("comeFrom", FETCH_PACKAGE_CODE);
                     startActivityForResult(intent, FETCH_PACKAGE_CODE);
                     break;
                 case DELIVER_PACKAGE_CODE:
-                    intent.putExtra("comeFrom",DELIVER_PACKAGE_CODE);
+                    intent.putExtra("comeFrom", DELIVER_PACKAGE_CODE);
                     startActivityForResult(intent, DELIVER_PACKAGE_CODE);
                     break;
             }
@@ -59,20 +59,21 @@ public class SelectActivity extends BaseActivity {
     private SharedPreferences sp;
     private String username;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GetCacheData();
 
     }
+
     /**
      * 获取用户信息缓存
      */
     private void GetCacheData() {
         sp = getSharedPreferences("config", MODE_PRIVATE);
-        username=sp.getString("username","");
+        username = sp.getString("username", "");
     }
+
     @Event(value = {R.id.btn_deliver_package, R.id.btn_fetch_package})
     private void ButtonOnClick(View view) {
         intent = new Intent();
@@ -81,11 +82,11 @@ public class SelectActivity extends BaseActivity {
 
         switch (view.getId()) {
             case R.id.btn_deliver_package:
-                intent.putExtra("comeFrom",DELIVER_PACKAGE_CODE);
+                intent.putExtra("comeFrom", DELIVER_PACKAGE_CODE);
                 startActivityForResult(intent, DELIVER_PACKAGE_CODE);
                 break;
             case R.id.btn_fetch_package:
-                intent.putExtra("comeFrom",FETCH_PACKAGE_CODE);
+                intent.putExtra("comeFrom", FETCH_PACKAGE_CODE);
                 startActivityForResult(intent, FETCH_PACKAGE_CODE);
                 break;
         }
@@ -102,6 +103,7 @@ public class SelectActivity extends BaseActivity {
                     url = new StringBuffer(data.getStringExtra("url"));
                     url.append("/identity/" + FETCH_PACKAGE_CODE);
                     url.append("/username/" + username);
+                    System.out.println(url);
                     getServer(url.toString(), FETCH_PACKAGE_CODE);
                 } else if (resultCode == RESULT_CODE_FAIL) {
                     tv_result.setTextColor(Color.RED);
@@ -113,6 +115,7 @@ public class SelectActivity extends BaseActivity {
                     url = new StringBuffer(data.getStringExtra("url"));
                     url.append("/identity/" + DELIVER_PACKAGE_CODE);
                     url.append("/username/" + username);
+                    System.out.println(url);
                     getServer(url.toString(), DELIVER_PACKAGE_CODE);
                 } else if (resultCode == RESULT_CODE_FAIL) {
                     tv_result.setTextColor(Color.RED);
@@ -124,38 +127,50 @@ public class SelectActivity extends BaseActivity {
         }
     }
 
+    private final static String SUCCESS_FETCH = "101";//取件成功
+    private final static String SUCCESS_DELIVER = "102";//派件成功
+    private final static String RESEND_FETCH_MESSAGE = "114";//取件重复扫码
+    private final static String RESEND_DELIVER_MESSAGE = "116";//派件重复扫码
+    private final static String FETCH_FIRST = "113";//先取件再派件
+    private final static String DELIVER_ALREADY = "115";//件已派送
+    private final static String SEND_MESSAGE_FAIL = "120";//短信发送失败
+
     public void getServer(String url, final int identity) {
         RequestParams params = new RequestParams(url);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 try {
-                    JSONObject jsonObject=new JSONObject(result);
-                    String order_state=jsonObject.getString("order_state");
+                    JSONObject jsonObject = new JSONObject(result);
+                    String order_state = jsonObject.getString("status");
                     switch (order_state) {
-                        case "1":
+                        case SUCCESS_FETCH:
                             tv_result.setTextColor(Color.BLACK);
                             tv_result.setText("取件短信发送成功\n" + "2s后返回取件扫码界面");
                             handler.sendEmptyMessageDelayed(identity, 2000);
                             break;
-                        case "2":
+                        case SUCCESS_DELIVER:
                             tv_result.setTextColor(Color.BLACK);
                             tv_result.setText("派件短信发送成功\n" + "2s后返回派件扫码界面");
                             handler.sendEmptyMessageDelayed(identity, 2000);
                             break;
-                        case "3":
+                        case RESEND_FETCH_MESSAGE:
                             tv_result.setTextColor(Color.RED);
-                            tv_result.setText("扫码失败\n" + "请不要重复扫码！");
+                            tv_result.setText("扫码失败\n" + "取件时请不要重复扫码！");
                             break;
-                        case "4":
+                        case RESEND_DELIVER_MESSAGE:
+                            tv_result.setTextColor(Color.RED);
+                            tv_result.setText("扫码失败\n" + "派件时请不要重复扫码！");
+                            break;
+                        case FETCH_FIRST:
                             tv_result.setTextColor(Color.RED);
                             tv_result.setText("扫码失败\n" + "请先取件再派件！");
                             break;
-                        case "5":
+                        case DELIVER_ALREADY:
                             tv_result.setTextColor(Color.RED);
                             tv_result.setText("扫码失败\n" + "已发送派件短信！");
                             break;
-                        case "6":
+                        case SEND_MESSAGE_FAIL:
                             tv_result.setTextColor(Color.RED);
                             tv_result.setText("短信发送失败\n" + "请重新扫码！");
                             break;
@@ -174,7 +189,7 @@ public class SelectActivity extends BaseActivity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 tv_result.setTextColor(Color.RED);
-                tv_result.setText("扫码失败\n"+"错误信息:"+ex.toString());
+                tv_result.setText("扫码失败\n" + "错误信息:" + ex.toString());
             }
 
             @Override
@@ -191,15 +206,15 @@ public class SelectActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK ){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-            final AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("退出");
             builder.setMessage("是否退出江大镖局");
             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent intent=new Intent("com.joshua.exit");
+                    Intent intent = new Intent("com.joshua.exit");
                     sendBroadcast(intent);
                 }
             });

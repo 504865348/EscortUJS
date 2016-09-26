@@ -1,34 +1,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffe1e0de"
+    android:background="@color/white"
     android:orientation="vertical">
-<TextView
-    android:layout_margin="20dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/select_job"
-    android:textSize="16sp"
-    android:textColor="#000"/>
-    <Button
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:text="@string/select_job"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <Button
         android:id="@+id/btn_fetch_package"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/fetch_package" />
-    <Button
         android:layout_margin="20dp"
+        android:text="@string/fetch_package" />
+
+    <Button
         android:id="@+id/btn_deliver_package"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:text="@string/deliver_package" />
 
-    <TextView
-        android:layout_margin="20dp"
-        android:id="@+id/tv_result"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textColor="#000"
-        android:textSize="16sp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center_horizontal"
+            android:textColor="#000"
+            android:textSize="16sp" />
+    </ScrollView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/activity_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>
